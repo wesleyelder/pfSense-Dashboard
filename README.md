@@ -20,6 +20,10 @@
 ![Screenshot](Grafana-pfSense.png)
 
 ## Setup Ubuntu VM
+
+Download the latest version from https://ubuntu.com/download/server 
+
+
     sudo apt update
     sudo apt install apt-transport-https ca-certificates curl software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
