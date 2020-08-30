@@ -21,59 +21,45 @@
 
 ## Running on
 
-    Grafana 6.7.2
-    Influxdb 1.7.10
-
+    Grafana Latest
+    Influxdb Latest
+    
 ### docker-compose example with persistent storage
 ```docker-compose
-
-  grafana-pfSense:
-    image: "grafana/grafana:6.7.2"
-    container_name: grafana
-    hostname: grafana
-    mem_limit: 4gb
+version: "2"
+services:
+  grafana:
+    image: grafana/grafana
+    container_name: grafana_container
+    restart: always
     ports:
-      - "3000:3000"
+      - 3000:3000
     environment:
-      TZ: "America/New_York"
+      TZ: "Asia/Singapore"
       GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel,grafana-worldmap-panel"
-      GF_PATHS_DATA: "/var/lib/grafana"
-      GF_DEFAULT_INSTANCE_NAME: "home"
-      GF_ANALYTICS_REPORTING_ENABLED: "false"
-      GF_SERVER_ENABLE_GZIP: "true"
-      GF_SERVER_DOMAIN: "home.mydomain"
+    networks:
+      - monitoring_network
     volumes:
-      - '/share/ContainerData/grafana:/var/lib/grafana'
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100M"
-    network_mode: bridge
-
-  influxdb-pfsense:
-    image: "influxdb:1.7.10-alpine"
-    container_name: influxdb
-    hostname: influxdb
-    mem_limit: 10gb
+      - grafana-volume:/var/lib/grafana
+  influxdb:
+    image: influxdb
+    container_name: influxdb_container
+    restart: always
     ports:
-      - "2003:2003"
-      - "8086:8086"
+      - 8086:8086
     environment:
-      TZ: "America/New_York"
-      INFLUXDB_DATA_QUERY_LOG_ENABLED: "false"
-      INFLUXDB_REPORTING_DISABLED: "true"
-      INFLUXDB_ADMIN_USER: "admin"
-      INFLUXDB_ADMIN_PASSWORD: "adminpassword"
-      INFLUXDB_USER: "pfsense"
-      INFLUXDB_USER_PASSWORD: "pfsenseuserpassword"
-      INFLUXDB_DB: "pfsense"
+      TZ: "Asia/Singapore"
+    networks:
+      - monitoring_network
     volumes:
-      - '/share/ContainerData/influxdb:/var/lib/influxdb'
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100M"
-    network_mode: bridge
+      - influxdb-volume:/var/lib/influxdb
+networks:
+  monitoring_network:
+volumes:
+  grafana-volume:
+    external: true
+  influxdb-volume:
+    external: true
 ```
    
 **Make sure you are using pfBlockerNG-devel**
