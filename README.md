@@ -22,8 +22,11 @@
 ## Setup Ubuntu VM
 
 Download the latest version from https://ubuntu.com/download/server 
+Install Os on VM or bare metal.
 
+Once OS is installed ssh to box and run the following commands:
 
+Install Docker 
     sudo apt update
     sudo apt install apt-transport-https ca-certificates curl software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
